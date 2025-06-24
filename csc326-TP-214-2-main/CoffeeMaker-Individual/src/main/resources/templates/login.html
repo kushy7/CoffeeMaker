@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Log in to CoffeeMaker</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var app = angular.module('myApp', []);
+	app.controller('loginCtrl', function($scope, $http, $q) {
+		
+		$scope.redirect = function() {
+			$http.get('/api/v1/user')
+				.then(function(response) {
+				if(response.status == 200) {
+					if(response.data.type == "CUSTOMER") {
+						window.location.replace('/customer/index');
+					} else if(response.data.type = "STAFF") {
+						window.location.replace('/staff/index');
+					} else {
+						console.log("Malformed user GET");
+					}
+				}
+			}, function(rejection) {
+				
+			});
+		}
+		
+		$scope.redirect();
+	});
+	/*]]>*/
+	</script>
+
+	<div layout:fragment="content"
+		ng-app="myApp" ng-controller="loginCtrl">
+		<div class="screenOver">
+			<div class="header">
+				<a class="header headerHome" href="/index">Home</a>
+				<p class="header headerGap"></p>
+				<a class="header headerLogin" href="/login">Log in</a>
+			</div>
+		</div>
+		<h1 class="titleLogin">Log in to CoffeeMaker</h1>
+		<div class="btnLoginPanel">
+			<a class="btn btn-lg btnLogin btnLoginCustomer" href="customer/login.html">
+				Log in as Customer
+			</a>
+			<a class="btn btn-lg btnLogin btnLoginStaff" href="staff/login">
+				Log in as Staff
+			</a>
+			<br>
+			<br>
+			<br>
+			<p class="loginPrompt">Don't have an account yet?</p>
+			<a class="btn btnLogin btnSignup" href="signup">
+				Sign up
+			</a>
+		</div>
+	</div>
+
+</body>
+</html>

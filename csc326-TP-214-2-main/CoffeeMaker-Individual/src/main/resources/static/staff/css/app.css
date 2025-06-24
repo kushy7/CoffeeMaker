@@ -1,0 +1,446 @@
+body, #mainWrapper {
+	height: 70%;
+	background-color: rgb(245, 245, 245);
+}
+
+body, .form-control {
+	font-size: 12px !important;
+}
+
+div.landing {
+	display: block;
+	margin-top: 12vw;
+	margin-left: auto;
+	margin-right: auto;
+	width: 60em;
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes slideDown {
+	0% {
+		opacity: 0;
+		transform: translate(0vw, -5vh);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(0vw, 0vh);
+	}
+}
+
+@keyframes slideUp {
+	0% {
+		opacity: 0;
+		transform: translate(0vw, 5vh);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(0vw, 0vh);
+	}
+}
+
+.ng-scope-orders {
+	margin: 0px;
+}
+
+.screenOver {
+	width: 100vw;
+	top: 0px;
+	position: absolute;
+    display: block;
+}
+
+.loading {
+	width: 30px;
+	height: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 40vh;
+	animation-name: fadeOut;
+	animation-duration: 0.1s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.4,0,1);
+}
+
+.loading.unpopped {
+	animation-play-state: paused;
+}
+
+.loading.popped {
+	animation-play-state: playing;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.loadingSwirl {
+	width: 30px;
+	height: 30px;
+	opacity: 0.3;
+    animation-name: rotate;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+div.header {
+	position: absolute;
+	width: 100vw;
+	height: 2em;
+	margin-top: 12px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	flex-grow: 0;
+}
+
+.headerGap {
+	flex-grow: 1;
+}
+
+.headerHome {
+	margin-left: 12px;
+	font-weight: 600;
+	font-size: 1.3em;
+}
+
+.headerLogin {
+	float: right;
+	margin-left: auto;
+	margin-right: 12px;
+	font-weight: 600;
+	font-size: 1.3em;
+}
+
+.customerLanding {
+	animation-name: fadeIn;
+	animation-duration: 3s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.4,0,1);
+}
+
+.customerLanding.unpopped {
+	animation-play-state: paused;
+}
+
+.customerLanding.popped {
+	animation-play-state: playing;
+}
+
+.customerLandingContainer {
+	margin-top: 20vh;
+}
+
+.staffLandingContainer {
+	margin-top: 10vh;
+}
+
+.customerLandingLead {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideDown;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0,0,1);
+	margin-left: calc(10px - 0.2em);
+	font-weight: 600;
+}
+
+.customerLandingTitle {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideDown;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.7,0,1);
+	margin-left: calc(10px - 0.1em);
+	margin-top: -0.25em;
+	font-weight: 600;
+}
+
+.customerLandingGroup {
+	margin: 4px;
+	padding: 0px;
+}
+
+.customerLandingOptionsBox {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideUp;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.5,0,1);
+	max-width: 21vw;
+	min-width: 20em;
+	margin: 4px 4px 20px;
+	font-style: italic;
+	box-shadow: 0px 4px black;
+	background-color: transparent;
+	border: 1px solid black;
+	padding: 12px 18px 12px 18px;
+	border-radius: 5px;
+	overflow: auto;
+}
+
+.customerLandingOptionsBox2 {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideUp;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.5,0,1);
+	max-width: 30vw;
+	min-width: 20em;
+	margin: 4px 4px 20px;
+	font-style: italic;
+	box-shadow: 0px 4px black;
+	background-color: transparent;
+	border: 1px solid black;
+	padding: 12px 18px 12px 18px;
+	border-radius: 5px;
+	overflow: auto;
+}
+
+.staffFufillBoxes {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideUp;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.5,0,1);
+	max-width: 30vw;
+	min-width: 20em;
+	height: 30vw;
+	margin: 4px 4px 20px;
+	font-style: italic;
+	box-shadow: 0px 4px black;
+	background-color: transparent;
+	border: 1px solid black;
+	padding: 12px 18px 12px 18px;
+	border-radius: 5px;
+	overflow: auto;
+}
+
+.landing {
+	animation-name: fadeIn;
+	animation-duration: 3s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.4,0,1);
+}
+
+.landing.unpopped {
+	animation-play-state: paused;
+}
+
+.landing.popped {
+	animation-play-state: playing;
+}
+
+.landingLead {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideDown;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.5,0,1);
+	margin-left: 1.4em;
+	font-style: italic;
+}
+
+.landingTag {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideDown;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,1,0,1);
+	float: right;
+	margin-right: 1.4em;
+	font-style: italic;
+}
+
+.landingHero {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideDown;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.8,0,1);
+	margin-top: -0.2em;
+	margin-bottom: -0.1em;
+	text-align: center;
+	font-size: 8em;
+	font-weight: 900;
+}
+
+.landingBtnTag {
+	animation-play-state: inherit;
+	animation-delay: 0.1s;
+	animation-name: slideUp;
+	animation-duration: 2s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,0.5,0,1);
+	text-align: center;
+}
+
+.titleLogin {
+	animation-name: slideDown;
+	animation-duration: 2s;
+	animation-timing-function: cubic-bezier(0,1,0,1);
+	margin-left: auto;
+	text-align: center;
+	font-style: bold;
+	margin-bottom: -20px;
+	margin-top: 20vh;
+}
+
+.btnLoginPanel {
+	animation-name: slideUp;
+	animation-duration: 1s;
+	animation-timing-function: cubic-bezier(0,1,0,1);
+	margin-top: 50px;
+	box-shadow: 0px 4px black;
+	background-color: transparent;
+	border: 1px solid black;
+	display: block;
+	padding: 15px;
+	border-radius: 5px;
+	max-width: 40%;
+	min-width: 40em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.btnLoginPanelSm {
+	animation-name: slideUp;
+	animation-duration: 1s;
+	animation-timing-function: cubic-bezier(0,1,0,1);
+	margin-top: 50px;
+	box-shadow: 0px 4px black;
+	background-color: transparent;
+	border: 1px solid black;
+	display: block;
+	padding: 15px;
+	border-radius: 5px;
+	max-width: 20%;
+	min-width: 30em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+p.loginPrompt {
+	text-align:center;
+}
+
+.btnLogin {
+	display: block;
+	font-weight: 600;
+	margin-left:auto;
+	margin-right:auto;
+	background-color: black;
+	color: #dddddd;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	transition: 1s;
+	transition-timing-function: cubic-bezier(0,1,0,1);
+}
+
+.btnLogin:focus {
+	transform: translate(0px, -4px);
+	box-shadow: 0px 4px black;
+	background-color: transparent;
+	border: 1px solid black;
+	color: black;
+}
+
+.btnLogin:hover {
+	transform: translate(0px, -4px);
+	box-shadow: 0px 4px black;
+	background-color: transparent;
+	border: 1px solid black;
+	color: black;
+}
+
+.btnLoginLanding {
+	animation-name: slideUp;
+	animation-duration: 1s;
+	animation-fill-mode: both;
+	animation-timing-function: cubic-bezier(0,1,0,1);
+	width: 12em;
+}
+
+.floatRight {
+	float: right;
+	margin-right: 18px;
+}
+
+.has-error {
+	color: red;
+}
+
+.formcontainer {
+	background-color: #DAE8E8;
+	padding: 20px;
+}
+
+.tablecontainer {
+	padding-left: 20px;
+}
+
+.generic-container {
+	width: 80%;
+	margin-left: 20px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	padding: 20px;
+	background-color: #EAE7E7;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	box-shadow: 0 0 30px black;
+}
+
+.custom-width {
+	width: 80px !important;
+}
+
+.username.ng-valid {
+	background-color: lightgreen;
+}
+
+.username.ng-dirty.ng-invalid-required {
+	background-color: red;
+}
+
+.username.ng-dirty.ng-invalid-min {
+	background-color: yellow;
+}
+
+.email.ng-valid {
+	background-color: lightgreen;
+}
+
+.email.ng-dirty.ng-invalid-required {
+	background-color: red;
+}

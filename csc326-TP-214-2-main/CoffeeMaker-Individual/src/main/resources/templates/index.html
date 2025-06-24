@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Welcome to the CSC326 CoffeeMaker</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var app = angular.module('myApp', []);
+	app.controller('landingCtrl', function($scope, $http, $q) {
+		$scope.pop = function() {
+			const elems = document.querySelectorAll(".unpopped");
+		    for (var i = 0; i < elems.length; i++) {
+		        elems[i].classList.replace("unpopped", "popped");
+		    }
+		}
+		
+		$scope.redirect = function() {
+			$http.get('/api/v1/user')
+				.then(function(response) {
+				if(response.status == 200) {
+					if(response.data.type == "CUSTOMER") {
+						window.location.replace('/customer/index');
+					} else if(response.data.type = "STAFF") {
+						window.location.replace('/staff/index');
+					} else {
+						console.log("Malformed user GET");
+					}
+				}
+			}, function(rejection) {
+				$scope.pop();
+			});
+		}
+		
+		$scope.redirect();
+	});
+	/*]]>*/
+	</script>
+	<div layout:fragment="content"
+		ng-app="myApp" ng-controller="landingCtrl">
+		<div class="screenOver">
+			<div class="loading unpopped">
+				<img class="loadingSwirl" th:src="@{/assets/loading.svg}" alt="loading..."/>
+			</div>
+		</div>
+		<div class="landing unpopped">
+			<h4 class="landingLead">Welcome to</h4>
+			<h1 class="landingHero">Coffee Maker</h1>
+			<h4 class="landingTag">a CSC326-214-T2 Project</h4>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<a tabindex="-1" class="btn btn-lg btnLogin btnLoginLanding" href="login.html">
+				Log in
+			</a>
+			<h5 class="landingBtnTag">to start your coffee journey!</h5>
+		</div>
+	</div>
+</body>
+</html>

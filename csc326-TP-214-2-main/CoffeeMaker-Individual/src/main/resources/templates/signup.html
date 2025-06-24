@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Sign Up</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('signupCtrl', function($scope, $http, $q) {
+			console.log("Hit!");
+			
+			$scope.userType = 'customer';
+			$scope.username = '';
+			$scope.password = '';
+			$scope.staffPassword = '';
+			$scope.message = '';
+			
+			$scope.allFieldsFilled = function() {
+				var requirements = {
+				    length: ($scope.password && $scope.password.length >= 8),
+				    uppercase: ($scope.password && /[A-Z]/.test($scope.password)),
+				    alphanumeric: ($scope.password && /^[a-zA-Z0-9]+$/.test($scope.password)),
+				    digits: ($scope.password && /[0-9].*[0-9]/.test($scope.password))
+				};
+				$scope.requirements = requirements;
+				if ($scope.userType === 'staff') {
+					return $scope.username && $scope.password && $scope.staffPassword &&
+						Object.values(requirements).every(function(val) { return val; });
+				} else {
+					return $scope.username && $scope.password &&
+						Object.values(requirements).every(function(val) { return val; });
+				}
+			}
+			
+			$scope.reset = function() {
+				$scope.userType = 'customer';
+				$scope.username = '';
+				$scope.password = '';
+				$scope.staffPassword = '';
+				if (undefined != $scope.signupForm) {
+					$scope.signupForm.$setPristine(); // reset Form
+				}
+			}
+			
+			$scope.submit = function() {
+				$scope.success = false;
+				$scope.failure = false;
+				
+				if ($scope.userType === 'customer') {
+					$scope.user = {
+						username : $scope.username,
+						password : $scope.password
+					};
+					$http.put('/api/v1/customers', $scope.user)
+						.then(function(response) {
+						console.log(response);
+						$scope.message = 'Customer account successfully created.';
+						$scope.success = true;
+						$scope.failure = false;
+						window.location.replace('/customer/index');
+					}, function(rejection) {
+						console.error("Error creating customer");
+						$scope.message = rejection.data.message;
+						$scope.success = false;
+						$scope.failure = true;
+						$scope.reset();
+					})
+				} else if ($scope.userType === 'staff') {
+					$scope.staff = {
+						username : $scope.username,
+						password : $scope.password,
+						manager : true,
+						userAdminPassword : $scope.staffPassword
+					}
+					$http.put('/api/v1/staff', $scope.staff)
+						.then(function(response) {
+						console.log(response);
+						$scope.message = 'Staff account successfully created.';
+						$scope.success = true;
+						$scope.failure = false;
+						window.location.replace('/staff/index');
+					}, function(rejection) {
+						console.error('Error creating staff');
+						$scope.message = rejection.data.message;
+						$scope.success = false;
+						$scope.failure = true;
+						$scope.reset();
+					})
+				} else {
+					console.error('No userType');
+					$scope.success = false;
+					$scope.failure = true;
+					$scope.reset();
+				}
+			}
+			$scope.reset();
+			
+			
+		});
+		
+		/*]]>*/
+	</script>
+	
+	
+	
+	<div ng-app="myApp"
+		ng-controller="signupCtrl as ctrl">
+		<div class="screenOver">
+			<div class="header">
+				<a class="header headerHome" href="/index">Home</a>
+				<p class="header headerGap"></p>
+				<p class="header headerLogin" id="currentUser"></p>
+				<a class="header headerLogin" href="/login">Log in</a>
+			</div>
+		</div>
+		<h1 class="titleLogin">CoffeeMaker Sign Up</h1>
+		<div class="btnLoginPanel">
+			<form name="signupForm"
+				class="form-horizontal">
+				<div class="form-group row">
+					<label class="col-md-5 control-lable" for="file">User Type:</label>
+					<div class="col-md-7">								
+						<select id="user-type" 
+							name="user-type" 
+							ng-model="userType"
+							style="float: right;">
+							<option value="customer" selected>Customer</option>
+							<option value="staff">Staff</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-md-4 control-lable" for="file">Username</label>
+					<div class="col-md-8">
+						<input type="text" ng-model="username" name="username"
+							class="name form-control input-sm"
+							placeholder="Enter username" required="0" />
+						<div class="has-error" ng-show="loginForm.$dirty">
+							<span ng-show="loginForm.name.$error.required">This
+								is a required field.</span> <span
+								ng-show="loginForm.name.$invalid">This field is
+								invalid.</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-md-4 control-lable" for="file">Password</label>
+					<div class="col-md-8">
+						<input type="password" ng-model="password" name="password"
+							class="name form-control input-sm"
+							placeholder="Enter password" required="0" />
+						<div class="has-error" ng-show="loginForm.$dirty">
+							<span ng-show="loginForm.password.$error.required">This
+								is a required field.</span> <span
+								ng-show="loginForm.password.$invalid">This field is
+								invalid.</span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group row" ng-show="userType === 'staff'">
+					<label class="col-md-4 control-lable" for="staff-password">Staff Password:</label>
+					<div class="col-md-8">
+						<input type="password" ng-model="staffPassword" name="password"
+							class="name form-control input-sm" id=""
+							placeholder="Enter password" required="0" />
+						<div class="has-error" ng-show="loginForm.$dirty">
+							<span ng-show="loginForm.password.$error.required">This
+								is a required field.</span> <span
+								ng-show="loginForm.password.$invalid">This field is
+								invalid.</span>
+						</div>
+					</div>
+				</div>
+				<br>
+				<br>
+				<br>
+				<div class="form-group row">
+					<div class="col-md-8">
+						<div ng-show="!requirements.length">Password must be at least 8 characters long<br></div>
+						<div ng-show="!requirements.uppercase">Password must contain at least 1 upper case letter<br></div>
+						<div ng-show="!requirements.alphanumeric">Password must contain only numbers and letters<br></div>
+						<div ng-show="!requirements.digits">Password must be contain at least 2 digits<br></div>
+						<div ng-show="success">{{ message }}</div>
+						<div ng-show="failure">Error while signing up. {{ message }}</div>
+					</div>
+					<div class="col-md-4">
+						<input type="submit" value="Submit"
+								ng-click="submit()"
+								style="float: right;"
+								class="btn btnLogin btn-sm"
+								ng-disabled="!allFieldsFilled()" />
+						<button type="button" ng-click="reset()"
+							style="float: right;"
+							class="btn btn-warning btn-sm" 
+							ng-disabled="signupForm.$pristine">Reset Form</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

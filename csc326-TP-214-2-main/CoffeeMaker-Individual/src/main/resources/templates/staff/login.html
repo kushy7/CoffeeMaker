@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Log in as Staff</title>
+<style>
+input.ng-valid {
+	background-color: lightgreen;
+}
+
+input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
+	background-color: red;
+}
+
+input.ng-dirty.ng-invalid-min {
+	background-color: yellow;
+}
+
+
+</style>
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('loginStaffCtrl', function($scope, $http, $q) {
+
+			$scope.name = '';
+			$scope.password = '';
+			
+			$scope.submit = function() {
+				$scope.success = false;
+				$scope.failure = false;
+				$http.post('/api/v1/staff/login', {
+					username: $scope.name,
+					password: $scope.password,
+				}).then(function(response) {
+					$scope.success = true;
+					$scope.failure = false;
+					$scope.reset();
+					if(response.data.type == "CUSTOMER") {
+						window.location.replace('/customer/index');
+					} else if(response.data.type == "STAFF") {
+						window.location.replace('/staff/index');
+					}
+				}, function(rejection) {
+					$scope.success = false;
+					$scope.failure = true;
+					$scope.reset();
+				});
+			}
+			
+			$scope.reset = function() {
+				$scope.name = '';
+				$scope.password = '';
+				if (undefined != $scope.loginForm) {
+					$scope.loginForm.$setPristine(); // reset Form
+				}
+			}
+			
+			$scope.launch = function() {
+				$http.get('/api/v1/user')
+					.then(function(response) {
+					if(response.status == 200) {
+						console.log(response);
+						if(response.data.type == "STAFF") {
+							window.location.replace('/staff/index');
+						} else if(response.data.type == "CUSTOMER") {
+							window.location.replace('/customer/index');
+						}
+					}
+				});
+			}
+			
+			$scope.launch();
+			
+			$scope.reset();
+		});
+		/*]]>*/
+	</script>
+	<div ng-app="myApp"
+		ng-controller="loginStaffCtrl as ctrl">
+		<div class="screenOver">
+			<div class="header">
+				<a class="header headerHome" href="/index">Home</a>
+				<p class="header headerGap"></p>
+				<a class="header headerLogin" href="/login">Log in</a>
+			</div>
+		</div>
+		<h1 class="titleLogin">Log in as Staff</h1>
+		<div class="btnLoginPanelSm">
+			<form ng-submit="submit()" name="loginForm"
+				class="form-horizontal">
+				<div class="row">
+					<div class="form-group col-md-12">
+						<label class="col-md-12 control-lable" for="file">Username</label>
+						<div class="col-md-8">
+							<input type="text" ng-model="name" name="name"
+								class="name form-control input-sm"
+								placeholder="Enter username" required="0" />
+							<div class="has-error" ng-show="loginForm.$dirty">
+								<span ng-show="loginForm.name.$error.required">This
+									is a required field.</span> <span
+									ng-show="loginForm.name.$invalid">This field is
+									invalid.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-12">
+						<label class="col-md-12 control-lable" for="file">Password</label>
+						<div class="col-md-8">
+							<input type="password" ng-model="password" name="password"
+								class="name form-control input-sm"
+								placeholder="Enter password" required="0" />
+							<div class="has-error" ng-show="loginForm.$dirty">
+								<span ng-show="loginForm.password.$error.required">This
+									is a required field.</span> <span
+									ng-show="loginForm.password.$invalid">This field is
+									invalid.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-actions floatRight">
+						<input type="submit" value="Submit"
+							class="btn btnLogin btn-sm"
+							ng-disabled="loginForm.$invalid" />
+					</div>
+				</div>
+				<div ng-show="success">Logged in!</div>
+				<div ng-show="failure">Invalid username or password</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

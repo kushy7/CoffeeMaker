@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>View Recipes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+		var app = angular.module('myApp', []);
+		app.controller('orderCtrol', function($scope, $http, $q) {
+			
+			
+			$http.get("/api/v1/recipes").then(function(response) {
+				$scope.recipes = response.data;
+			});
+			
+			
+			$http.get("/api/v1/order/count").then(function(response) {
+				// Update orderid value based on numOrders
+				$scope.orderid = "Order " + response.data;
+				console.log("SOCOLOO " + $scope.orderid);
+			});
+			
+			$scope.reset = function() {
+		        $scope.orders = [];
+		        $scope.amtPaid = '';
+		        $scope.name = '';
+		        $http.get("/api/v1/order/count").then(function(response) {
+					// Update orderid value based on numOrders
+					$scope.orderid = "Order " + response.data;
+					console.log("SOCOLOO " + $scope.orderid);
+				});
+		        if (undefined != $scope.orderForm) {
+					$scope.orderForm.$setPristine(); // reset Form
+				}
+		    }
+		    
+			$scope.make = function() {
+				//var amtPaid = $scope.amtPaid;
+				var name = $scope.name;
+				var orderid = $scope.orderid;
+				console.log(orderid);
+				var recipe;
+				var username;
+				var customer;
+				$scope.success = false;
+				$scope.failure = false;
+				$http.get("/api/v1/recipes/" + name).then(function(response) {
+					recipe = response.data[0];
+					console.log(recipe);
+					
+					$http.get("/api/v1/user").then(function(response) {
+						username = response.data.username;
+						console.log(username);
+						
+						var orderObject = {
+								orderId: $scope.orderid,
+								status: "pending",
+								customer: username,
+								recipe: recipe
+						}
+						
+						console.log(orderObject);
+						
+						$http.post("/api/v1/orders", orderObject).then(
+								function(response) {
+									$scope.success = true;
+									$scope.failure = false;
+									$scope.reset();
+								}, function(errResponse) {
+									console.log(errResponse);
+									$scope.success = false;
+									$scope.failure = true;
+									$scope.error = "Error while making order.";
+									$scope.reset();
+								});
+						
+					});
+					
+				});
+
+			}
+			$scope.submit = function() {
+				$scope.make();
+
+				$scope.reset();
+			}
+			$scope.reset();
+		});
+
+		/*]]>*/
+	</script>
+
+	<div ng-app="myApp"
+		ng-controller="orderCtrol as ctrl">
+		<div class="screenOver">
+			<div class="header">
+				<a class="header headerHome" href="/index">Home</a>
+				<p class="header headerGap"></p>
+				<a class="header headerLogin" href="/login">Log in</a>
+			</div>
+		</div>
+		<h1 class="titleLogin">Order Beverages</h1>
+		<div class="btnLoginPanelSm">
+			<form ng-submit="submit()" name="orderForm"
+					class="form-horizontal">
+				<div class="row">	
+						<label style="margin-left: 20px">
+							<h5>Select a Beverage:</h5>
+						</label>
+						<select class="btn btnLogin btn-sm"
+							style="margin-left: 20px"
+							required="true"
+							ng-model="$parent.name"
+							name="name"
+							value="{{recipe.name}}">
+							<option ng-repeat="recipe in recipes">{{recipe.name}}</option>
+						</select>
+				</div>
+				<div class="row">	
+					<input type="submit" value="Submit Order"
+						class="btn btnLogin floatRight"
+						ng-disabled="orderForm.$invalid" />
+				</div>
+			</form>
+			<div ng-show="success" class="success">Order was
+				made.</div>
+
+			<div ng-show="failure">An error occurred: {{error}}</div>
+		</div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Welcome to the CSC326 CoffeeMaker</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var app = angular.module('myApp', []);
+	app.controller('landingCtrl', function($scope, $http, $q) {
+
+		$scope.pop = function() {
+			const elems = document.querySelectorAll(".unpopped");
+		    for (var i = 0; i < elems.length; i++) {
+		        elems[i].classList.replace("unpopped", "popped");
+		    }
+		}
+		
+		$scope.launch = function() {
+			$http.get('/api/v1/user')
+				.then(function(response) {
+				if(response.status == 200) {
+					console.log(response);
+					if(response.data.type !== "CUSTOMER") {
+						window.location.replace('/index');
+					} else if(response.data.type == "STAFF") {
+						window.location.replace('/staff/index');
+					} else {
+						const elem = document.getElementById("currentUser");
+						elem.innerHTML = "Logged in as: " +
+							response.data.username;
+						const elem2 = document.getElementById("loginLogout");
+						elem2.innerHTML = "<a class=\"header headerLogin\" href=\"/api/v1/logout\">Log out</a>"
+						$scope.pop();
+					}
+				}
+			}, function(rejection) {
+				window.location.replace('/index');
+			});
+		}
+		
+		$scope.launch();
+		
+		$http.get("/api/v1/orders").then(function(response) {
+			$scope.orders = response.data;
+			
+			$scope.pendingOrders = $scope.orders.filter(function(order) {
+			    return order.status === 'pending';
+			});
+			
+			console.log($scope.pendingOrders);
+			  
+			$scope.inProgressOrders = $scope.orders.filter(function(order) {
+			    return order.status === 'in progress';
+			});
+			
+			console.log($scope.inProgressOrders);
+			
+			$scope.completedOrders = $scope.orders.filter(function(order) {
+			    return order.status === 'completed';
+			});
+			
+			console.log($scope.inProgressOrders);
+			
+			$scope.pickedUpOrders = $scope.orders.filter(function(order) {
+			    return order.status === 'picked up';
+			});
+			
+			console.log($scope.pickedUpOrders);
+			 
+		});
+		
+		$scope.pickup = function(order) {
+			
+			order.status = 'picked up';
+			
+			$http.put("/api/v1/orders", order).then(function(response) {
+				console.log(response.data);
+				
+				$http.get("/api/v1/orders").then(function(response) {
+					$scope.orders = response.data;
+					
+					$scope.completedOrders = $scope.orders.filter(function(order) {
+					    return order.status === 'completed';
+					});
+					
+					console.log($scope.pickedUpOrders);
+					
+					$scope.pickedUpOrders = $scope.orders.filter(function(order) {
+					    return order.status === 'picked up';
+					});
+					
+					console.log($scope.pickedUpOrders);
+					 
+				});
+				
+			});
+			
+		}
+	});
+	/*]]>*/
+	</script>
+	<div layout:fragment="content"
+		ng-app="myApp" ng-controller="landingCtrl">
+		<div class="screenOver">
+			<div class="header">
+				<a class="header headerHome" href="/customer/index">Home</a>
+				<p class="header headerGap"></p>
+				<p class="header headerLogin" id="currentUser"></p>
+				<div id="loginLogout">
+					<a class="header headerLogin" href="/login">Log in</a>
+				</div>
+			</div>
+			<div class="loading unpopped">
+				<img class="loadingSwirl" th:src="@{/assets/loading.svg}" alt="loading..."/>
+			</div>
+		</div>
+		<div class="customerLanding customerLandingContainer unpopped">
+			<div class="col-md-1"></div>
+			<div class="col-md-11">
+				<h2 class="customerLandingLead">Coffee Maker</h2>
+				<h4 class="customerLandingTitle">Available Options</h4>
+				<br>
+				<div class="row">
+					<div class="col-md-4 customerLandingGroup">
+						<div class="customerLandingOptionsBox2">
+							<div class="row">
+								<div class="col-md-6"><h5>Order Options</h5></div>
+								<div class="col-md-6">
+									<a class="btn btn-sm btnLogin btnCustomerOptions" 
+									    href="order.html">Order Beverages</a>
+							    </div>
+							</div>
+						</div>
+					<div class="col-md-4"></div>
+				</div>
+				<div class="col-md-3 customerLandingGroup">
+						<div class="orderUpdates">
+							<div class="row">
+								<div class="col-md-12">
+									<h4>Current Orders</h4>
+								</div>
+							</div>
+							
+							<div class="ng-scope">
+							<div class="exclude" ng-repeat="order in completedOrders">
+									<div class="exclude row">	
+										<div class="col-md-12">
+											<div class="customerLandingOptionsBox" >
+												<b>{{ order.orderId }}</b>
+												<button class="btn btnLogin pull-right" ng-click="pickup(order)">Pick up</button>
+												<br>{{ order.recipe.name }} <br>Status: {{ order.status }}
+											</div>
+										</div>
+									</div>
+							 </div>
+							<div class="exclude" ng-repeat="order in inProgressOrders">
+									<div class="exclude row">	
+										<div class="col-md-12">
+											<div class="customerLandingOptionsBox" >
+												<b>{{ order.orderId }}</b>
+												<br>{{ order.recipe.name }} <br>Status: {{ order.status }}
+											</div>
+										</div>
+									</div>
+							 </div>
+								<div class="exclude" ng-repeat="order in pendingOrders">
+									<div class="exclude row">	
+										<div class="col-md-12">
+											<div class="customerLandingOptionsBox" >
+												<b>{{ order.orderId }}</b>
+												<br>{{ order.recipe.name }} <br>Status: {{ order.status }}
+											</div>
+										</div>
+									</div>
+							 </div>
+						</div>
+				 </div>
+			</div>
+			<div class="col-md-3 customerLandingGroup">
+						<div class="orderUpdates">
+							<div class="row">
+								<div class="col-md-12">
+									<h4>Order History</h4>
+								</div>
+							</div>
+							
+							<div class="ng-scope">
+								<div class="exclude" ng-repeat="order in pickedUpOrders">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="customerLandingOptionsBox">
+												<b>{{ order.orderId }}</b>
+												<br>{{ order.recipe.name }} <br>Status: {{ order.status }}
+											</div>
+										</div>
+									</div>
+								</div>	
+							</div>
+							
+						</div>
+					</div>
+		</div>
+	</div>
+</body>
+</html>
