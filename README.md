@@ -5,11 +5,11 @@ To run CoffeeMaker for the first time, ensure that the 'src/main/resources/appli
 
 *Line Coverage (should be >=70%)*
 
-![Coverage](.github/badges/jacoco.svg)
+![Coverage](badges/badgeImg/jacoco.svg)
 
 *Branch Coverage (should be >=50%)*
 
-![Branches](.github/badges/branches.svg)
+![Branches](badges/badgeImg/branches.svg)
 
 
 
